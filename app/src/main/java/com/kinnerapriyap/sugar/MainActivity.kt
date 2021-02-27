@@ -8,13 +8,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
-import com.kinnerapriyap.sugar.ui.theme.IsthattoneandroidTheme
+import com.kinnerapriyap.sugar.ui.theme.IsThatToneTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            IsthattoneandroidTheme {
+            IsThatToneTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     Greeting("Android")
@@ -32,7 +32,7 @@ fun Greeting(name: String) {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    IsthattoneandroidTheme {
+    IsThatToneTheme {
         Greeting("Android")
     }
 }
