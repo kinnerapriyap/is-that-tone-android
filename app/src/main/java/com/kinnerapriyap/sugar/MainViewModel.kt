@@ -130,8 +130,8 @@ class MainViewModel : ViewModel() {
         openGameCard.invoke()
     }
 
-    fun startGame(penWordCard: () -> Unit) {
-        val rounds = answers.value ?: return
+    fun startGame(openWordCard: () -> Unit) {
+        val answers = gameCardInfo.value?.answers ?: return
         (roomDocument ?: return)
             .update(
                 mapOf(
@@ -142,7 +142,7 @@ class MainViewModel : ViewModel() {
                 )
             )
             .addOnSuccessListener {
-
+                openWordCard.invoke()
             }
             .addOnFailureListener {
                 // TODO: Handle error
