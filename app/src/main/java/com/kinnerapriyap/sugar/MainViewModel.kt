@@ -53,8 +53,12 @@ class MainViewModel : ViewModel() {
             .addOnSuccessListener { doc ->
                 val gameRoom = doc.toObject<GameRoom>()
                 when {
-                    gameRoom == null -> createRoom(openGameCard)
-                    !gameRoom.isStarted -> joinRoom(gameRoom, openGameCard)
+                    gameRoom == null ->
+                        createRoom(openGameCard)
+                    !gameRoom.isStarted ->
+                        joinRoom(gameRoom, openGameCard)
+                    gameRoom.players?.containsKey(uid.value) == true ->
+                        rejoinRoom(openGameCard)
                     else -> {
                         // TODO: Show room is occupied
                     }
@@ -65,11 +69,9 @@ class MainViewModel : ViewModel() {
             }
     }
 
+    private fun rejoinRoom(openGameCard: () -> Unit) = goToGameCard(openGameCard)
+
     private fun joinRoom(gameRoom: GameRoom, openGameCard: () -> Unit) {
-        if (gameRoom.isStarted && gameRoom.players?.containsKey(uid.value) == false) {
-            // TODO: Tell user they cannot join game if it already started
-            return
-        }
         val players = gameRoom.players?.toMutableMap()?.apply {
             putIfAbsent(uid.value, userName.value)
         }
