@@ -33,8 +33,14 @@ fun GameCardScreen(
 ) {
     val rounds by viewModel.rounds.observeAsState(emptyMap())
     val isStarted by viewModel.isStarted.observeAsState(false)
+    val isActivePlayer by viewModel.isActivePlayer.observeAsState(false)
     Scaffold {
-        DimOverlay(alpha = if (isStarted) 0 else 0x66, startGame = { viewModel.startGame() })
+        if (!isStarted) {
+            DimOverlay(
+                isActivePlayer = isActivePlayer,
+                startGame = { viewModel.startGame() }
+            )
+        }
         LazyVerticalGrid(cells = GridCells.Fixed(2)) {
             items(rounds.toList()) { (roundNo, answer) ->
                 Card(
@@ -58,7 +64,11 @@ fun GameCardScreen(
 }
 
 @Composable
-fun DimOverlay(alpha: Int, startGame: () -> Unit) {
+fun DimOverlay(
+    isActivePlayer: Boolean,
+    alpha: Int = 0x66,
+    startGame: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -66,8 +76,12 @@ fun DimOverlay(alpha: Int, startGame: () -> Unit) {
             .background(Color(0, 0, 0, alpha)),
         contentAlignment = Alignment.Center
     ) {
-        Button(onClick = { startGame.invoke() }) {
-            Text(text = stringResource(id = R.string.start_game))
+        if (isActivePlayer) {
+            Button(onClick = { startGame.invoke() }) {
+                Text(text = stringResource(id = R.string.start_game))
+            }
+        } else {
+            Text(text = stringResource(id = R.string.waiting_to_start))
         }
     }
 }
