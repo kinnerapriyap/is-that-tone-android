@@ -16,6 +16,8 @@ const val IS_STARTED_KEY = "isStarted"
 const val ROUNDS_INFO_KEY = "roundsInfo"
 const val ACTIVE_ROUND_KEY = "activeRound"
 
+const val MAX_PLAYERS = 4
+
 class MainViewModel : ViewModel() {
 
     private val db = Firebase.firestore
@@ -55,12 +57,12 @@ class MainViewModel : ViewModel() {
                 when {
                     gameRoom == null ->
                         createRoom(openGameCard)
-                    !gameRoom.isStarted ->
-                        joinRoom(gameRoom, openGameCard)
                     gameRoom.players?.containsKey(uid.value) == true ->
                         rejoinRoom(openGameCard)
+                    !gameRoom.isStarted && MAX_PLAYERS <= gameRoom.players?.count() ?: 0 ->
+                        joinRoom(gameRoom, openGameCard)
                     else -> {
-                        // TODO: Show room is occupied
+                        // TODO: Show room is occupied or player count is full
                     }
                 }
             }
