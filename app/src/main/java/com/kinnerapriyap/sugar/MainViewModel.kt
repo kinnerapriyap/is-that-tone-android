@@ -123,6 +123,7 @@ class MainViewModel : ViewModel() {
 
                 _gameCardInfo.value = GameCardInfo(
                     answers = answers,
+                    activeRound = gameRoom?.activeRound,
                     isStarted = gameRoom?.isStarted ?: false,
                     isActivePlayer = gameRoom?.activePlayer == uid.value
                 )

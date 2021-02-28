@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -55,9 +56,10 @@ fun GameCardScreen(
                         .size(200.dp)
                         .padding(40.dp)
                         .clip(MaterialTheme.shapes.medium)
-                        .clickable {
-                            // TODO: Fancy animation to flip card?
-                        },
+                        .clickable(
+                            role = Role.Button,
+                            enabled = roundNo == gameCardInfo.activeRound.toString()
+                        ) { openWordCard.invoke() },
                     border = BorderStroke(2.dp, MaterialTheme.colors.onBackground)
                 ) {
                     Text(
