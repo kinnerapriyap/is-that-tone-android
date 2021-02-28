@@ -5,7 +5,6 @@ import androidx.navigation.compose.navigate
 
 object Destinations {
     const val Home = "home"
-    const val StartGame = "startGame"
     const val GameCard = "gameCard"
     const val RoundOver = "roundOver"
     const val GameOver = "gameOver"
@@ -17,9 +16,6 @@ object Destinations {
 class Actions(navController: NavHostController) {
     val returnHome: () -> Unit = {
         navController.navigate(Destinations.Home)
-    }
-    val startGame: () -> Unit = {
-        navController.navigate(Destinations.StartGame)
     }
     val openGameCard: () -> Unit = {
         navController.navigate(Destinations.GameCard)

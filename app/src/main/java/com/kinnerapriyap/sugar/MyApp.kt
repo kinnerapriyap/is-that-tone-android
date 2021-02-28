@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kinnerapriyap.sugar.ui.screens.GameCardScreen
 import com.kinnerapriyap.sugar.ui.screens.HomeScreen
-import com.kinnerapriyap.sugar.ui.screens.StartScreen
 import com.kinnerapriyap.sugar.ui.screens.WordCardScreen
 import com.kinnerapriyap.sugar.ui.screens.RoundOverScreen
 import com.kinnerapriyap.sugar.ui.screens.GameOverScreen
@@ -21,10 +20,7 @@ fun MyApp() {
     Surface(color = MaterialTheme.colors.background) {
         NavHost(navController = navController, startDestination = Destinations.Home) {
             composable(Destinations.Home) {
-                HomeScreen(actions.startGame)
-            }
-            composable(Destinations.StartGame) {
-                StartScreen(actions.openGameCard)
+                HomeScreen(actions.openGameCard)
             }
             composable(Destinations.GameCard) {
                 GameCardScreen(actions.openWordCard, actions.showRoundOver, actions.showGameOver)
