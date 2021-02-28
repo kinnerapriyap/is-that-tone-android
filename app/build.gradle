@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.kinnerapriyap.sugar"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -51,6 +51,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
     implementation platform('com.google.firebase:firebase-bom:26.5.0')
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
