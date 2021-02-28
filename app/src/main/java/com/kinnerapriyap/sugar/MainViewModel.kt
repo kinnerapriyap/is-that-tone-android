@@ -44,7 +44,7 @@ class MainViewModel : ViewModel() {
                 val room = doc.toObject<GameRoom>()
                 when {
                     room == null -> createRoom(openGameCard)
-                    room.isStarted == false -> joinRoom(room, openGameCard)
+                    !room.isStarted -> joinRoom(room, openGameCard)
                     else -> {
                         // TODO: Show room is occupied
                     }
