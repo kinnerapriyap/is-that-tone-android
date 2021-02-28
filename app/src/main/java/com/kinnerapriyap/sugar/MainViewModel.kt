@@ -44,8 +44,8 @@ class MainViewModel : ViewModel() {
     }
 
     // (roundNo to answer)
-    private val _rounds = MutableLiveData<Map<Int, String?>>(emptyMap())
-    val rounds: LiveData<Map<Int, String?>> = _rounds
+    private val _answers = MutableLiveData<Map<Int, String?>>(emptyMap())
+    val answers: LiveData<Map<Int, String?>> = _answers
 
     private val _isStarted = MutableLiveData(false)
     val isStarted: LiveData<Boolean> = _isStarted
@@ -110,14 +110,14 @@ class MainViewModel : ViewModel() {
                 val gameRoom = snapshot.toObject<GameRoom>()
                 _isStarted.value = gameRoom?.isStarted ?: false
                 val currentMaxRounds = gameRoom?.players?.count() ?: 0
-                _rounds.value = (1..currentMaxRounds).toList().map { it to null }.toMap()
+                _answers.value = (1..currentMaxRounds).toList().map { it to null }.toMap()
                 _isActivePlayer.value = gameRoom?.activePlayer == uid.value
             }
         openGameCard.invoke()
     }
 
     fun startGame(penWordCard: () -> Unit) {
-        val rounds = rounds.value ?: return
+        val rounds = answers.value ?: return
         (roomDocument ?: return)
             .update(
                 mapOf(

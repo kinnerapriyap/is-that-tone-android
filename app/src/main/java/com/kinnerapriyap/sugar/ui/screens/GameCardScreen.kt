@@ -31,7 +31,7 @@ fun GameCardScreen(
     showRoundOver: () -> Unit,
     showGameOver: () -> Unit
 ) {
-    val rounds by viewModel.rounds.observeAsState(emptyMap())
+    val rounds by viewModel.answers.observeAsState(emptyMap())
     val isStarted by viewModel.isStarted.observeAsState(false)
     val isActivePlayer by viewModel.isActivePlayer.observeAsState(false)
     Scaffold {
