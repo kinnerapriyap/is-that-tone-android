@@ -15,6 +15,9 @@ object Destinations {
 }
 
 class Actions(navController: NavHostController) {
+    val returnHome: () -> Unit = {
+        navController.navigate(Destinations.Home)
+    }
     val startGame: () -> Unit = {
         navController.navigate(Destinations.StartGame)
     }
