@@ -1,6 +1,7 @@
 package com.kinnerapriyap.sugar
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +41,11 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         viewModel.onUidChanged(auth.currentUser?.uid)
                     } else {
-                        // TODO: Show toast
+                        Toast.makeText(
+                            this,
+                            resources.getString(R.string.auth_unsuccessful),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
         }

@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">is-that-tone-android</string>
+
+    <!-- Error messages -->
+    <string name="auth_unsuccessful">Auth was unsuccessful, please reopen the app.</string>
+    <string name="text_field_blank">Don\'t leave the fields blank! :)</string>
+
+    <!-- Home -->
     <string name="join_game">Join game</string>
+    <string name="room_name_placeholder">Enter the room name</string>
+    <string name="user_name_placeholder">Enter a user name</string>
 
     <!-- Content descriptions -->
     <string name="room_name_leading_icon">Home icon</string>

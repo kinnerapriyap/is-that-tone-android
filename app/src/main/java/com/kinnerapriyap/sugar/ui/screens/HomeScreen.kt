@@ -16,6 +16,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -44,7 +45,7 @@ fun HomeScreen(
                 value = roomName,
                 onValueChange = { viewModel.onRoomNameChanged(it) },
                 singleLine = true,
-                placeholder = { Text(text = "Enter the room name") },
+                placeholder = { Text(text = stringResource(id = R.string.room_name_placeholder)) },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Home,
@@ -57,7 +58,7 @@ fun HomeScreen(
                 value = userName,
                 onValueChange = { viewModel.onUserNameChanged(it) },
                 singleLine = true,
-                placeholder = { Text(text = "Enter a user name") },
+                placeholder = { Text(text = stringResource(id = R.string.user_name_placeholder)) },
                 leadingIcon = {
                     Icon(
                         Icons.Filled.Person,
@@ -73,7 +74,10 @@ fun HomeScreen(
                     } else {
                         scope.launch {
                             scaffoldState.snackbarHostState
-                                .showSnackbar("Don't leave the fields blank! :)")
+                                .showSnackbar(
+                                    LocalContext.current.resources
+                                        .getString(R.string.text_field_blank)
+                                )
                         }
                     }
                 }
