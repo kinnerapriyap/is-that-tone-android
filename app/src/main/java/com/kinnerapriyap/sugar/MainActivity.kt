@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = Firebase.auth
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {

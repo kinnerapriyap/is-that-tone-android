@@ -1,5 +1,6 @@
 package com.kinnerapriyap.sugar
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -14,6 +15,7 @@ import com.kinnerapriyap.sugar.ui.screens.WordCardScreen
 import com.kinnerapriyap.sugar.ui.screens.RoundOverScreen
 import com.kinnerapriyap.sugar.ui.screens.GameOverScreen
 
+@ExperimentalFoundationApi
 @Composable
 fun MyApp(viewModel: MainViewModel = viewModel()) {
     val navController = rememberNavController()
@@ -24,7 +26,12 @@ fun MyApp(viewModel: MainViewModel = viewModel()) {
                 HomeScreen(viewModel, actions.openGameCard)
             }
             composable(Destinations.GameCard) {
-                GameCardScreen(actions.openWordCard, actions.showRoundOver, actions.showGameOver)
+                GameCardScreen(
+                    viewModel,
+                    actions.openWordCard,
+                    actions.showRoundOver,
+                    actions.showGameOver
+                )
             }
             composable(Destinations.RoundOver) {
                 RoundOverScreen(actions.openGameCard, actions.navigateBack)
