@@ -40,7 +40,7 @@ fun MyApp(viewModel: MainViewModel = viewModel()) {
                 GameOverScreen(actions.returnHome)
             }
             composable(Destinations.WordCard) {
-                WordCardScreen()
+                WordCardScreen(viewModel, actions.navigateBack)
             }
         }
     }
