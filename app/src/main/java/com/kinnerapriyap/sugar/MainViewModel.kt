@@ -7,12 +7,14 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.kinnerapriyap.sugar.data.GameCardInfo
 import com.kinnerapriyap.sugar.data.GameRoom
 
 const val ROOMS_COLLECTION = "rooms"
 const val PLAYERS_KEY = "players"
 const val IS_STARTED_KEY = "isStarted"
 const val ROUNDS_INFO_KEY = "roundsInfo"
+const val ACTIVE_ROUND_KEY = "activeRound"
 
 class MainViewModel : ViewModel() {
 
@@ -43,15 +45,8 @@ class MainViewModel : ViewModel() {
         _uid.value = uid
     }
 
-    // (roundNo to answer)
-    private val _answers = MutableLiveData<Map<Int, String?>>(emptyMap())
-    val answers: LiveData<Map<Int, String?>> = _answers
-
-    private val _isStarted = MutableLiveData(false)
-    val isStarted: LiveData<Boolean> = _isStarted
-
-    private val _isActivePlayer = MutableLiveData(false)
-    val isActivePlayer: LiveData<Boolean> = _isActivePlayer
+    private val _gameCardInfo = MutableLiveData(GameCardInfo())
+    val gameCardInfo: LiveData<GameCardInfo> = _gameCardInfo
 
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
@@ -112,10 +107,25 @@ class MainViewModel : ViewModel() {
                 }
 
                 val gameRoom = snapshot.toObject<GameRoom>()
-                _isStarted.value = gameRoom?.isStarted ?: false
-                val currentMaxRounds = gameRoom?.players?.count() ?: 0
-                _answers.value = (1..currentMaxRounds).toList().map { it to null }.toMap()
-                _isActivePlayer.value = gameRoom?.activePlayer == uid.value
+                val answers =
+                    if (gameRoom?.roundsInfo == null) {
+                        (1..(gameRoom?.players?.count() ?: 0))
+                            .toList()
+                            .map { it.toString() to null }
+                            .toMap()
+                    } else {
+                        gameRoom.roundsInfo.mapValues {
+                            uid.value?.let { uid ->
+                                it.value.getOrDefault(uid, null)
+                            }
+                        }
+                    }
+
+                _gameCardInfo.value = GameCardInfo(
+                    answers = answers,
+                    isStarted = gameRoom?.isStarted ?: false,
+                    isActivePlayer = gameRoom?.activePlayer == uid.value
+                )
             }
         openGameCard.invoke()
     }
@@ -126,8 +136,9 @@ class MainViewModel : ViewModel() {
             .update(
                 mapOf(
                     IS_STARTED_KEY to true,
+                    ACTIVE_ROUND_KEY to 1,
                     ROUNDS_INFO_KEY to
-                            rounds.map { it.key.toString() to emptyMap<String, String>()}.toMap()
+                            answers.map { it.key to emptyMap<String, String>() }.toMap()
                 )
             )
             .addOnSuccessListener {
