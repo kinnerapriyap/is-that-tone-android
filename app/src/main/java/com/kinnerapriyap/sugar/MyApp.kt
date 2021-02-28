@@ -4,6 +4,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,13 +15,13 @@ import com.kinnerapriyap.sugar.ui.screens.RoundOverScreen
 import com.kinnerapriyap.sugar.ui.screens.GameOverScreen
 
 @Composable
-fun MyApp() {
+fun MyApp(viewModel: MainViewModel = viewModel()) {
     val navController = rememberNavController()
     val actions = remember(navController) { Actions(navController) }
     Surface(color = MaterialTheme.colors.background) {
         NavHost(navController = navController, startDestination = Destinations.Home) {
             composable(Destinations.Home) {
-                HomeScreen(actions.openGameCard)
+                HomeScreen(viewModel, actions.openGameCard)
             }
             composable(Destinations.GameCard) {
                 GameCardScreen(actions.openWordCard, actions.showRoundOver, actions.showGameOver)
