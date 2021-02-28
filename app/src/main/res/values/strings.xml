@@ -10,6 +10,9 @@
     <string name="room_name_placeholder">Enter the room name</string>
     <string name="user_name_placeholder">Enter a user name</string>
 
+    <!-- Game card -->
+    <string name="start_game">Start game</string>
+
     <!-- Content descriptions -->
     <string name="room_name_leading_icon">Home icon</string>
     <string name="user_name_leading_icon">User icon</string>
