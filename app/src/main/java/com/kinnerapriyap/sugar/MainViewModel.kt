@@ -40,6 +40,13 @@ class MainViewModel : ViewModel() {
         _uid.value = uid
     }
 
+    // (roundNo to answer)
+    private val _rounds = MutableLiveData<Map<Int, String?>>(emptyMap())
+    val rounds: LiveData<Map<Int, String?>> = _rounds
+
+    private val _isStarted = MutableLiveData(false)
+    val isStarted: LiveData<Boolean> = _isStarted
+
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
             .addOnSuccessListener { doc ->
@@ -64,7 +71,7 @@ class MainViewModel : ViewModel() {
         (roomDocument ?: return)
             .update(mapOf("players" to players))
             .addOnSuccessListener {
-                openGameCard.invoke()
+                goToGameCard(openGameCard)
             }
             .addOnFailureListener {
                 // TODO: Handle error
@@ -79,10 +86,30 @@ class MainViewModel : ViewModel() {
         (roomDocument ?: return)
             .set(newRoom)
             .addOnSuccessListener {
-                openGameCard.invoke()
+                goToGameCard(openGameCard)
             }
             .addOnFailureListener {
                 // TODO: Handle error
             }
+    }
+
+    private fun goToGameCard(openGameCard: () -> Unit) {
+        (roomDocument ?: return)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    // TODO: Handle error
+                    return@addSnapshotListener
+                }
+
+                val gameRoom = snapshot.toObject<GameRoom>()
+                _isStarted.value = gameRoom?.isStarted ?: false
+                val currentMaxRounds = gameRoom?.players?.count() ?: 0
+                _rounds.value = (1..currentMaxRounds).toList().map { it to null }.toMap()
+            }
+        openGameCard.invoke()
+    }
+
+    fun startGame() {
+
     }
 }
