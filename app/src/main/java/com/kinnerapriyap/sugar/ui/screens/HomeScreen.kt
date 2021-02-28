@@ -75,8 +75,7 @@ fun HomeScreen(
                         scope.launch {
                             scaffoldState.snackbarHostState
                                 .showSnackbar(
-                                    LocalContext.current.resources
-                                        .getString(R.string.text_field_blank)
+                                    "Don't leave the fields blank! :)"
                                 )
                         }
                     }
