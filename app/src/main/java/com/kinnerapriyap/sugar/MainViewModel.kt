@@ -43,10 +43,10 @@ class MainViewModel : ViewModel() {
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
             .addOnSuccessListener { doc ->
-                val room = doc.toObject<GameRoom>()
+                val gameRoom = doc.toObject<GameRoom>()
                 when {
-                    room == null -> createRoom(openGameCard)
-                    !room.isStarted -> joinRoom(room, openGameCard)
+                    gameRoom == null -> createRoom(openGameCard)
+                    !gameRoom.isStarted -> joinRoom(gameRoom, openGameCard)
                     else -> {
                         // TODO: Show room is occupied
                     }
