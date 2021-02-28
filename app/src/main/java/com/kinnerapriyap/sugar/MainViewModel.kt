@@ -3,8 +3,22 @@ package com.kinnerapriyap.sugar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
+import com.kinnerapriyap.sugar.data.Room
+
+const val ROOMS_COLLECTION = "rooms"
 
 class MainViewModel : ViewModel() {
+
+    private val db = Firebase.firestore
+    private val roomDocument by lazy {
+        val roomName = roomName.value
+        return@lazy if (roomName != null && roomName.isNotBlank()) {
+            db.collection(ROOMS_COLLECTION).document(roomName)
+        } else null
+    }
 
     private val _roomName = MutableLiveData("")
     val roomName: LiveData<String> = _roomName
@@ -22,5 +36,52 @@ class MainViewModel : ViewModel() {
     val uid: LiveData<String?> = _uid
     fun onUidChanged(uid: String?) {
         _uid.value = uid
+    }
+
+    fun enterRoom(openGameCard: () -> Unit) {
+        (roomDocument ?: return).get()
+            .addOnSuccessListener { doc ->
+                val room = doc.toObject<Room>()
+                when {
+                    room == null -> createRoom(openGameCard)
+                    room.isStarted == false -> joinRoom(room, openGameCard)
+                    else -> {
+                        // TODO: Show room is occupied
+                    }
+                }
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
+    }
+
+    private fun joinRoom(room: Room, openGameCard: () -> Unit) {
+        val players = room.players?.toMutableMap()?.apply {
+            putIfAbsent(uid.value, userName.value)
+        }
+        val updatedRoom = Room(players = players)
+        (roomDocument ?: return)
+            .set(updatedRoom)
+            .addOnSuccessListener {
+                openGameCard.invoke()
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
+    }
+
+    private fun createRoom(openGameCard: () -> Unit) {
+        val newRoom = Room(
+            activeRound = 1,
+            players = mapOf(uid.value to userName.value)
+        )
+        (roomDocument ?: return)
+            .set(newRoom)
+            .addOnSuccessListener {
+                openGameCard.invoke()
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
     }
 }
