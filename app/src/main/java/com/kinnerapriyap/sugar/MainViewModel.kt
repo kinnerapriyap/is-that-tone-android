@@ -17,4 +17,10 @@ class MainViewModel : ViewModel() {
     fun onUserNameChanged(newName: String) {
         _userName.value = newName
     }
+
+    private val _uid = MutableLiveData<String?>(null)
+    val uid: LiveData<String?> = _uid
+    fun onUidChanged(uid: String?) {
+        _uid.value = uid
+    }
 }
