@@ -138,6 +138,11 @@ class MainViewModel : ViewModel() {
                             }
                         }
                     }
+                _wordCardInfo.value =
+                    _wordCardInfo.value?.copy(
+                        wordCard = gameRoom?.activeRound?.let { gameRoom.wordCards?.get(it - 1) },
+                        usedAnswers = answers.values.filterNotNull()
+                    )
 
                 _gameCardInfo.value = GameCardInfo(
                     answers = answers,
