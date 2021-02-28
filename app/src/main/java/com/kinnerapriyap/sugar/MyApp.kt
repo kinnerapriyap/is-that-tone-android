@@ -26,7 +26,7 @@ fun MyApp() {
                 GameCardScreen(actions.openWordCard, actions.showRoundOver, actions.showGameOver)
             }
             composable(Destinations.RoundOver) {
-                RoundOverScreen(actions.openGameCard)
+                RoundOverScreen(actions.openGameCard, actions.navigateBack)
             }
             composable(Destinations.GameOver) {
                 GameOverScreen(actions.returnHome)

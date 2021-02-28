@@ -3,5 +3,5 @@ package com.kinnerapriyap.sugar.ui.screens
 import androidx.compose.runtime.Composable
 
 @Composable
-fun RoundOverScreen(openGameCard: () -> Unit) {
+fun RoundOverScreen(openGameCard: () -> Unit, navigateBack: () -> Unit) {
 }
