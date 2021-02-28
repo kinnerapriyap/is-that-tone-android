@@ -3,6 +3,7 @@ package com.kinnerapriyap.sugar
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -13,12 +14,13 @@ const val ROOMS_COLLECTION = "rooms"
 class MainViewModel : ViewModel() {
 
     private val db = Firebase.firestore
-    private val roomDocument by lazy {
-        val roomName = roomName.value
-        return@lazy if (roomName != null && roomName.isNotBlank()) {
-            db.collection(ROOMS_COLLECTION).document(roomName)
-        } else null
-    }
+    private val roomDocument: DocumentReference?
+        get() {
+            val roomName = roomName.value
+            return if (roomName != null && roomName.isNotBlank()) {
+                db.collection(ROOMS_COLLECTION).document(roomName)
+            } else null
+        }
 
     private val _roomName = MutableLiveData("")
     val roomName: LiveData<String> = _roomName
