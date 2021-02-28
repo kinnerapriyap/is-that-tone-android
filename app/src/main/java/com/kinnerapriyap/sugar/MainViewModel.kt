@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.kinnerapriyap.sugar.data.Room
+import com.kinnerapriyap.sugar.data.GameRoom
 
 const val ROOMS_COLLECTION = "rooms"
 
@@ -41,7 +41,7 @@ class MainViewModel : ViewModel() {
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
             .addOnSuccessListener { doc ->
-                val room = doc.toObject<Room>()
+                val room = doc.toObject<GameRoom>()
                 when {
                     room == null -> createRoom(openGameCard)
                     room.isStarted == false -> joinRoom(room, openGameCard)
@@ -55,11 +55,11 @@ class MainViewModel : ViewModel() {
             }
     }
 
-    private fun joinRoom(room: Room, openGameCard: () -> Unit) {
-        val players = room.players?.toMutableMap()?.apply {
+    private fun joinRoom(gameRoom: GameRoom, openGameCard: () -> Unit) {
+        val players = gameRoom.players?.toMutableMap()?.apply {
             putIfAbsent(uid.value, userName.value)
         }
-        val updatedRoom = Room(players = players)
+        val updatedRoom = GameRoom(players = players)
         (roomDocument ?: return)
             .set(updatedRoom)
             .addOnSuccessListener {
@@ -71,7 +71,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun createRoom(openGameCard: () -> Unit) {
-        val newRoom = Room(
+        val newRoom = GameRoom(
             currentPlayer = uid.value,
             players = mapOf(uid.value to userName.value)
         )
