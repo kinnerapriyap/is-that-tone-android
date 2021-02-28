@@ -72,7 +72,7 @@ class MainViewModel : ViewModel() {
 
     private fun createRoom(openGameCard: () -> Unit) {
         val newRoom = Room(
-            activeRound = 1,
+            currentPlayer = uid.value,
             players = mapOf(uid.value to userName.value)
         )
         (roomDocument ?: return)
