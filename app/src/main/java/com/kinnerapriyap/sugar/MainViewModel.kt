@@ -73,7 +73,7 @@ class MainViewModel : ViewModel() {
                         createRoom(openGameCard)
                     gameRoom.players?.containsKey(uid.value) == true ->
                         rejoinRoom(openGameCard)
-                    !gameRoom.isStarted && MAX_PLAYERS <= gameRoom.players?.count() ?: 0 ->
+                    !gameRoom.isStarted && MAX_PLAYERS > gameRoom.players?.count() ?: 0 ->
                         joinRoom(gameRoom, openGameCard)
                     else -> {
                         // TODO: Show room is occupied or player count is full
