@@ -47,6 +47,9 @@ class MainViewModel : ViewModel() {
     private val _isStarted = MutableLiveData(false)
     val isStarted: LiveData<Boolean> = _isStarted
 
+    private val _isActivePlayer = MutableLiveData(false)
+    val isActivePlayer: LiveData<Boolean> = _isActivePlayer
+
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
             .addOnSuccessListener { doc ->
@@ -80,7 +83,7 @@ class MainViewModel : ViewModel() {
 
     private fun createRoom(openGameCard: () -> Unit) {
         val newRoom = GameRoom(
-            currentPlayer = uid.value,
+            activePlayer = uid.value,
             players = mapOf(uid.value to userName.value)
         )
         (roomDocument ?: return)
@@ -105,6 +108,7 @@ class MainViewModel : ViewModel() {
                 _isStarted.value = gameRoom?.isStarted ?: false
                 val currentMaxRounds = gameRoom?.players?.count() ?: 0
                 _rounds.value = (1..currentMaxRounds).toList().map { it to null }.toMap()
+                _isActivePlayer.value = gameRoom?.activePlayer == uid.value
             }
         openGameCard.invoke()
     }
