@@ -8,5 +8,6 @@ data class GameRoom(
     val players: Map<String?, String?>? = null,
     val activePlayer: String? = null,
     @field:JvmField // use this annotation if your Boolean field is prefixed with 'is'
-    val isStarted: Boolean = false
+    val isStarted: Boolean = false,
+    val wordCards: List<WordCard>? = null
 )

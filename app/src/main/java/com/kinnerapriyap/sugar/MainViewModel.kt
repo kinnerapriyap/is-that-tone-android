@@ -9,12 +9,18 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.kinnerapriyap.sugar.data.GameCardInfo
 import com.kinnerapriyap.sugar.data.GameRoom
+import com.kinnerapriyap.sugar.data.WordCard
+import com.kinnerapriyap.sugar.data.WordCardInfo
 
 const val ROOMS_COLLECTION = "rooms"
-const val PLAYERS_KEY = "players"
-const val IS_STARTED_KEY = "isStarted"
 const val ROUNDS_INFO_KEY = "roundsInfo"
 const val ACTIVE_ROUND_KEY = "activeRound"
+const val PLAYERS_KEY = "players"
+const val IS_STARTED_KEY = "isStarted"
+const val WORD_CARDS_KEY = "wordCards"
+
+const val WORD_CARDS_COLLECTION = "wordCards"
+const val LANGUAGE_KEY = "language"
 
 const val MAX_PLAYERS = 4
 
@@ -49,6 +55,14 @@ class MainViewModel : ViewModel() {
 
     private val _gameCardInfo = MutableLiveData(GameCardInfo())
     val gameCardInfo: LiveData<GameCardInfo> = _gameCardInfo
+
+    private val maxRounds: Int
+        get() = _gameCardInfo.value?.answers?.size ?: 0
+
+    private var _wordCards: List<WordCard>? = null
+
+    private var _wordCardInfo = MutableLiveData(WordCardInfo())
+    val wordCardInfo: LiveData<WordCardInfo> = _wordCardInfo
 
     fun enterRoom(openGameCard: () -> Unit) {
         (roomDocument ?: return).get()
@@ -136,6 +150,24 @@ class MainViewModel : ViewModel() {
     }
 
     fun startGame(openWordCard: () -> Unit) {
+        db.collection(WORD_CARDS_COLLECTION)
+            .whereEqualTo(LANGUAGE_KEY, "tl")
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                querySnapshot.documents.shuffle()
+                _wordCards =
+                    querySnapshot.documents
+                        .take(maxRounds)
+                        .mapNotNull { it.toObject<WordCard>() }
+
+                initialiseRoom(openWordCard)
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
+    }
+
+    private fun initialiseRoom(openWordCard: () -> Unit) {
         val answers = gameCardInfo.value?.answers ?: return
         (roomDocument ?: return)
             .update(
@@ -143,7 +175,8 @@ class MainViewModel : ViewModel() {
                     IS_STARTED_KEY to true,
                     ACTIVE_ROUND_KEY to 1,
                     ROUNDS_INFO_KEY to
-                            answers.map { it.key to emptyMap<String, String>() }.toMap()
+                            answers.map { it.key to emptyMap<String, String>() }.toMap(),
+                    WORD_CARDS_KEY to _wordCards
                 )
             )
             .addOnSuccessListener {
