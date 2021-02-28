@@ -38,7 +38,7 @@ fun GameCardScreen(
         if (!isStarted) {
             DimOverlay(
                 isActivePlayer = isActivePlayer,
-                startGame = { viewModel.startGame() }
+                startGame = { viewModel.startGame(openWordCard) }
             )
         }
         LazyVerticalGrid(cells = GridCells.Fixed(2)) {

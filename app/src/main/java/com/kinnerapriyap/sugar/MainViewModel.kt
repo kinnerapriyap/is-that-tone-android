@@ -10,6 +10,9 @@ import com.google.firebase.ktx.Firebase
 import com.kinnerapriyap.sugar.data.GameRoom
 
 const val ROOMS_COLLECTION = "rooms"
+const val PLAYERS_KEY = "players"
+const val IS_STARTED_KEY = "isStarted"
+const val ROUNDS_INFO_KEY = "roundsInfo"
 
 class MainViewModel : ViewModel() {
 
@@ -72,7 +75,7 @@ class MainViewModel : ViewModel() {
             putIfAbsent(uid.value, userName.value)
         }
         (roomDocument ?: return)
-            .update(mapOf("players" to players))
+            .update(mapOf(PLAYERS_KEY to players))
             .addOnSuccessListener {
                 goToGameCard(openGameCard)
             }
@@ -113,7 +116,21 @@ class MainViewModel : ViewModel() {
         openGameCard.invoke()
     }
 
-    fun startGame() {
+    fun startGame(penWordCard: () -> Unit) {
+        val rounds = rounds.value ?: return
+        (roomDocument ?: return)
+            .update(
+                mapOf(
+                    IS_STARTED_KEY to true,
+                    ROUNDS_INFO_KEY to
+                            rounds.map { it.key.toString() to emptyMap<String, String>()}.toMap()
+                )
+            )
+            .addOnSuccessListener {
 
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
     }
 }
