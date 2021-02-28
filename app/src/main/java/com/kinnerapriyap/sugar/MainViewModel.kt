@@ -59,9 +59,8 @@ class MainViewModel : ViewModel() {
         val players = gameRoom.players?.toMutableMap()?.apply {
             putIfAbsent(uid.value, userName.value)
         }
-        val updatedRoom = GameRoom(players = players)
         (roomDocument ?: return)
-            .set(updatedRoom)
+            .update(mapOf("players" to players))
             .addOnSuccessListener {
                 openGameCard.invoke()
             }
