@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">is-that-tone-android</string>
+    <string name="join_game">Join game</string>
+
+    <!-- Content descriptions -->
+    <string name="room_name_leading_icon">Home icon</string>
+    <string name="user_name_leading_icon">User icon</string>
 </resources>
