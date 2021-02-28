@@ -32,6 +32,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kinnerapriyap.sugar.MainViewModel
 import com.kinnerapriyap.sugar.R
 import com.kinnerapriyap.sugar.data.GameCardInfo
+import com.kinnerapriyap.sugar.ui.screens.CardState.Companion.getCardState
+
+enum class CardState {
+    DONE, CURRENT, TO_PLAY;
+
+    companion object {
+        fun getCardState(roundNo: String, activeRound: Int?) =
+            when {
+                roundNo < activeRound.toString() -> DONE
+                roundNo == activeRound.toString() -> CURRENT
+                else -> TO_PLAY
+            }
+    }
+}
 
 @ExperimentalFoundationApi
 @Composable
@@ -51,15 +65,21 @@ fun GameCardScreen(
         }
         LazyVerticalGrid(cells = GridCells.Fixed(2)) {
             items(gameCardInfo.answers.toList()) { (roundNo, answer) ->
+                val cardState = getCardState(roundNo, gameCardInfo.activeRound)
                 Card(
                     modifier = Modifier
                         .size(200.dp)
                         .padding(40.dp)
                         .clip(MaterialTheme.shapes.medium)
-                        .clickable(
-                            role = Role.Button,
-                            enabled = roundNo == gameCardInfo.activeRound.toString()
-                        ) { openWordCard.invoke() },
+                        .clickable(role = Role.Button, enabled = cardState == CardState.CURRENT) {
+                            openWordCard.invoke()
+                        },
+                    backgroundColor = when (cardState) {
+                        CardState.DONE -> Color.LightGray
+                        CardState.CURRENT -> MaterialTheme.colors.primary
+                        CardState.TO_PLAY -> MaterialTheme.colors.secondary
+                    },
+                    elevation = 4.dp,
                     border = BorderStroke(2.dp, MaterialTheme.colors.onBackground)
                 ) {
                     Text(
