@@ -53,7 +53,6 @@ enum class CardState {
 fun GameCardScreen(
     viewModel: MainViewModel = viewModel(),
     openWordCard: () -> Unit,
-    showRoundOver: () -> Unit,
     showGameOver: () -> Unit
 ) {
     val gameCardInfo: GameCardInfo by viewModel.gameCardInfo.observeAsState(GameCardInfo())

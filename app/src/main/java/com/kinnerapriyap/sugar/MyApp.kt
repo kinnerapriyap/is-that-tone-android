@@ -12,7 +12,6 @@ import androidx.navigation.compose.rememberNavController
 import com.kinnerapriyap.sugar.ui.screens.GameCardScreen
 import com.kinnerapriyap.sugar.ui.screens.HomeScreen
 import com.kinnerapriyap.sugar.ui.screens.WordCardScreen
-import com.kinnerapriyap.sugar.ui.screens.RoundOverScreen
 import com.kinnerapriyap.sugar.ui.screens.GameOverScreen
 
 @ExperimentalFoundationApi
@@ -29,12 +28,8 @@ fun MyApp(viewModel: MainViewModel = viewModel()) {
                 GameCardScreen(
                     viewModel,
                     actions.openWordCard,
-                    actions.showRoundOver,
                     actions.showGameOver
                 )
-            }
-            composable(Destinations.RoundOver) {
-                RoundOverScreen(actions.openGameCard, actions.navigateBack)
             }
             composable(Destinations.GameOver) {
                 GameOverScreen(actions.returnHome)
