@@ -5,6 +5,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -58,7 +59,7 @@ fun GameCardScreen(
     val gameCardInfo: GameCardInfo by viewModel.gameCardInfo.observeAsState(GameCardInfo())
     Scaffold {
         if (!gameCardInfo.isStarted) {
-            DimOverlay(
+            StartDimOverlay(
                 isActivePlayer = gameCardInfo.isActivePlayer,
                 startGame = { viewModel.startGame(openWordCard) }
             )
@@ -96,18 +97,12 @@ fun GameCardScreen(
 }
 
 @Composable
-fun DimOverlay(
+fun StartDimOverlay(
     isActivePlayer: Boolean,
     alpha: Int = 0x66,
     startGame: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .zIndex(1f)
-            .background(Color(0, 0, 0, alpha)),
-        contentAlignment = Alignment.Center
-    ) {
+    DimOverlay(alpha = alpha) {
         if (isActivePlayer) {
             Button(onClick = { startGame.invoke() }) {
                 Text(text = stringResource(id = R.string.start_game))
@@ -116,4 +111,19 @@ fun DimOverlay(
             Text(text = stringResource(id = R.string.waiting_to_start))
         }
     }
+}
+
+@Composable
+fun DimOverlay(
+    alpha: Int = 0x66,
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(1f)
+            .background(Color(0, 0, 0, alpha)),
+        contentAlignment = Alignment.Center,
+        content = content
+    )
 }
