@@ -71,7 +71,10 @@ fun GameCardScreen(
                         .size(200.dp)
                         .padding(40.dp)
                         .clip(MaterialTheme.shapes.medium)
-                        .clickable(role = Role.Button, enabled = cardState == CardState.CURRENT) {
+                        .clickable(
+                            role = Role.Button,
+                            enabled = cardState == CardState.CURRENT && answer.isNullOrBlank()
+                        ) {
                             openWordCard.invoke()
                         },
                     backgroundColor = when (cardState) {
