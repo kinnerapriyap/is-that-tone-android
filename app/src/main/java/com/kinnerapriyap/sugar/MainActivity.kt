@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    public override fun onStart() {
+    override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser?.apply { viewModel.onUidChanged(uid) }
         if (currentUser == null) {
@@ -51,6 +51,11 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.finishGame()
     }
 }
 
