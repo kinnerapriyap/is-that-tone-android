@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -117,8 +118,11 @@ class MainViewModel : ViewModel() {
             }
     }
 
+    private lateinit var listener: ListenerRegistration
+
     private fun goToGameCard(openGameCard: () -> Unit) {
-        (roomDocument ?: return)
+        openGameCard.invoke()
+        listener = (roomDocument ?: return)
             .addSnapshotListener { snapshot, error ->
                 if (error != null || snapshot == null) {
                     // TODO: Handle error
@@ -150,7 +154,10 @@ class MainViewModel : ViewModel() {
                     isActivePlayer = gameRoom?.activePlayer == _uid
                 )
             }
-        openGameCard.invoke()
+    }
+
+    fun finishGame() {
+        listener.remove()
     }
 
     fun startGame(openWordCard: () -> Unit) {
