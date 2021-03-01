@@ -45,7 +45,14 @@ fun WordCardScreen(
                     }
                 }
             }
-            Button(onClick = {  }) {
+            Button(
+                onClick = {
+                    selectedAnswer?.let { answer ->
+                        viewModel.setAnswer(answer, navigateBack)
+                    }
+                },
+                enabled = selectedAnswer?.isNotBlank() == true,
+            ) {
                 Text(text = stringResource(id = R.string.submit_option))
             }
         }

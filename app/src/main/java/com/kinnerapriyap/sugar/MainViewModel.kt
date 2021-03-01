@@ -53,6 +53,8 @@ class MainViewModel : ViewModel() {
         _uid.value = uid
     }
 
+    private var _gameRoom: GameRoom? = null
+
     private val _gameCardInfo = MutableLiveData(GameCardInfo())
     val gameCardInfo: LiveData<GameCardInfo> = _gameCardInfo
 
@@ -125,6 +127,7 @@ class MainViewModel : ViewModel() {
                 }
 
                 val gameRoom = snapshot.toObject<GameRoom>()
+                _gameRoom = gameRoom
                 val answers =
                     if (gameRoom?.roundsInfo == null) {
                         (1..(gameRoom?.players?.count() ?: 0))
@@ -186,6 +189,25 @@ class MainViewModel : ViewModel() {
             )
             .addOnSuccessListener {
                 openWordCard.invoke()
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
+    }
+
+    fun setAnswer(selectedAnswer: String, navigateBack: () -> Unit) {
+        val newRoundsInfo =
+            _gameRoom?.roundsInfo?.mapValues { roundInfo ->
+                if (roundInfo.key.toInt() == _gameRoom?.activeRound) {
+                    roundInfo.value.toMutableMap().apply {
+                        uid.value?.let { put(it, selectedAnswer) }
+                    }
+                } else roundInfo.value
+            }
+        (roomDocument ?: return)
+            .update(mapOf(ROUNDS_INFO_KEY to newRoundsInfo))
+            .addOnSuccessListener {
+                navigateBack.invoke()
             }
             .addOnFailureListener {
                 // TODO: Handle error
