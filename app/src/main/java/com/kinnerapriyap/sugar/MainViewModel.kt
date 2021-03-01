@@ -47,10 +47,9 @@ class MainViewModel : ViewModel() {
         _userName.value = newName
     }
 
-    private val _uid = MutableLiveData<String?>(null)
-    val uid: LiveData<String?> = _uid
+    private var _uid: String? = null
     fun onUidChanged(uid: String?) {
-        _uid.value = uid
+        _uid = uid
     }
 
     private var _gameRoom: GameRoom? = null
@@ -73,7 +72,7 @@ class MainViewModel : ViewModel() {
                 when {
                     gameRoom == null ->
                         createRoom(openGameCard)
-                    gameRoom.players?.containsKey(uid.value) == true ->
+                    gameRoom.players?.containsKey(_uid) == true ->
                         rejoinRoom(openGameCard)
                     !gameRoom.isStarted && MAX_PLAYERS > gameRoom.players?.count() ?: 0 ->
                         joinRoom(gameRoom, openGameCard)
@@ -91,7 +90,7 @@ class MainViewModel : ViewModel() {
 
     private fun joinRoom(gameRoom: GameRoom, openGameCard: () -> Unit) {
         val players = gameRoom.players?.toMutableMap()?.apply {
-            putIfAbsent(uid.value, userName.value)
+            putIfAbsent(_uid, userName.value)
         }
         (roomDocument ?: return)
             .update(mapOf(PLAYERS_KEY to players))
@@ -105,8 +104,8 @@ class MainViewModel : ViewModel() {
 
     private fun createRoom(openGameCard: () -> Unit) {
         val newRoom = GameRoom(
-            activePlayer = uid.value,
-            players = mapOf(uid.value to userName.value)
+            activePlayer = _uid,
+            players = mapOf(_uid to userName.value)
         )
         (roomDocument ?: return)
             .set(newRoom)
@@ -136,7 +135,7 @@ class MainViewModel : ViewModel() {
                             .toMap()
                     } else {
                         gameRoom.roundsInfo.mapValues {
-                            uid.value?.let { uid ->
+                            _uid?.let { uid ->
                                 it.value.getOrDefault(uid, null)
                             }
                         }
@@ -151,7 +150,7 @@ class MainViewModel : ViewModel() {
                     answers = answers,
                     activeRound = gameRoom?.activeRound,
                     isStarted = gameRoom?.isStarted ?: false,
-                    isActivePlayer = gameRoom?.activePlayer == uid.value
+                    isActivePlayer = gameRoom?.activePlayer == _uid
                 )
             }
         openGameCard.invoke()
@@ -200,7 +199,7 @@ class MainViewModel : ViewModel() {
             _gameRoom?.roundsInfo?.mapValues { roundInfo ->
                 if (roundInfo.key.toInt() == _gameRoom?.activeRound) {
                     roundInfo.value.toMutableMap().apply {
-                        uid.value?.let { put(it, selectedAnswer) }
+                        _uid?.let { put(it, selectedAnswer) }
                     }
                 } else roundInfo.value
             }
