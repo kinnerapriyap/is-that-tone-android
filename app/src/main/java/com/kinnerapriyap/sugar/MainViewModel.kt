@@ -58,7 +58,7 @@ class MainViewModel : ViewModel() {
     val gameCardInfo: LiveData<GameCardInfo> = _gameCardInfo
 
     private val maxRounds: Int
-        get() = _gameCardInfo.value?.answers?.size ?: 0
+        get() = _gameRoom?.players?.size ?: 0
 
     private var _wordCards: List<WordCard>? = null
 
@@ -129,10 +129,7 @@ class MainViewModel : ViewModel() {
                 _gameRoom = gameRoom
                 val answers =
                     if (gameRoom?.roundsInfo == null) {
-                        (1..(gameRoom?.players?.count() ?: 0))
-                            .toList()
-                            .map { it.toString() to null }
-                            .toMap()
+                        (1..maxRounds).toList().map { it.toString() to null }.toMap()
                     } else {
                         gameRoom.roundsInfo.mapValues {
                             _uid?.let { uid ->
@@ -175,14 +172,14 @@ class MainViewModel : ViewModel() {
     }
 
     private fun initialiseRoom(openWordCard: () -> Unit) {
-        val answers = gameCardInfo.value?.answers ?: return
+        val initialRoomInfo =
+            (1..maxRounds).toList().map { it.toString() to emptyMap<String, String?>() }.toMap()
         (roomDocument ?: return)
             .update(
                 mapOf(
                     IS_STARTED_KEY to true,
                     ACTIVE_ROUND_KEY to 1,
-                    ROUNDS_INFO_KEY to
-                            answers.map { it.key to emptyMap<String, String>() }.toMap(),
+                    ROUNDS_INFO_KEY to initialRoomInfo,
                     WORD_CARDS_KEY to _wordCards
                 )
             )
