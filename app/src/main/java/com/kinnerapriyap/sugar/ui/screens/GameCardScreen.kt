@@ -73,7 +73,7 @@ fun GameCardScreen(
                         .clip(MaterialTheme.shapes.medium)
                         .clickable(
                             role = Role.Button,
-                            enabled = cardState == CardState.CURRENT && answer.isNullOrBlank()
+                            enabled = cardState == CardState.CURRENT
                         ) {
                             openWordCard.invoke()
                         },
