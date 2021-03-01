@@ -17,7 +17,7 @@
     <string name="go_to_next_round">Go to next round</string>
 
     <!-- Word card -->
-    <string name="submit_option">Submit option</string>
+    <string name="confirm">Confirm</string>
 
     <!-- Content descriptions -->
     <string name="room_name_leading_icon">Home icon</string>

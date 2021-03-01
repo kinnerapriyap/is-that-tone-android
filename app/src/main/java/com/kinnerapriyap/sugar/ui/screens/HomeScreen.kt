@@ -37,7 +37,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState
     ) {
         Column(
-            modifier = Modifier.padding(20.dp).fillMaxHeight().fillMaxWidth(),
+            modifier = Modifier.padding(20.dp).fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
