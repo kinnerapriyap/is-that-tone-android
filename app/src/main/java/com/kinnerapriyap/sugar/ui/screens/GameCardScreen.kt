@@ -99,10 +99,9 @@ fun GameCardScreen(
 @Composable
 fun StartDimOverlay(
     isActivePlayer: Boolean,
-    alpha: Int = 0x66,
     startGame: () -> Unit
 ) {
-    DimOverlay(alpha = alpha) {
+    DimOverlay(alpha = 0x66) {
         if (isActivePlayer) {
             Button(onClick = { startGame.invoke() }) {
                 Text(text = stringResource(id = R.string.start_game))
