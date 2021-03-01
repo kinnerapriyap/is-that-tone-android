@@ -12,6 +12,7 @@ import com.kinnerapriyap.sugar.data.GameCardInfo
 import com.kinnerapriyap.sugar.data.GameRoom
 import com.kinnerapriyap.sugar.data.WordCard
 import com.kinnerapriyap.sugar.data.WordCardInfo
+import com.kinnerapriyap.sugar.data.Player
 
 const val ROOMS_COLLECTION = "rooms"
 const val ROUNDS_INFO_KEY = "roundsInfo"
@@ -58,7 +59,7 @@ class MainViewModel : ViewModel() {
     private val _gameCardInfo = MutableLiveData(GameCardInfo())
     val gameCardInfo: LiveData<GameCardInfo> = _gameCardInfo
 
-    private val maxRounds: Int
+    private val playerCount: Int
         get() = _gameRoom?.players?.size ?: 0
 
     private var _wordCards: List<WordCard>? = null
@@ -73,9 +74,9 @@ class MainViewModel : ViewModel() {
                 when {
                     gameRoom == null ->
                         createRoom(openGameCard)
-                    gameRoom.players?.containsKey(_uid) == true ->
+                    gameRoom.players.firstOrNull { it.uid == _uid } != null ->
                         rejoinRoom(openGameCard)
-                    !gameRoom.isStarted && MAX_PLAYERS > gameRoom.players?.count() ?: 0 ->
+                    !gameRoom.isStarted && gameRoom.players.size < MAX_PLAYERS ->
                         joinRoom(gameRoom, openGameCard)
                     else -> {
                         // TODO: Show room is occupied or player count is full
@@ -90,8 +91,8 @@ class MainViewModel : ViewModel() {
     private fun rejoinRoom(openGameCard: () -> Unit) = goToGameCard(openGameCard)
 
     private fun joinRoom(gameRoom: GameRoom, openGameCard: () -> Unit) {
-        val players = gameRoom.players?.toMutableMap()?.apply {
-            putIfAbsent(_uid, userName.value)
+        val players = gameRoom.players.toMutableList().apply {
+            add(Player(_uid, userName.value))
         }
         (roomDocument ?: return)
             .update(mapOf(PLAYERS_KEY to players))
@@ -105,8 +106,7 @@ class MainViewModel : ViewModel() {
 
     private fun createRoom(openGameCard: () -> Unit) {
         val newRoom = GameRoom(
-            activePlayer = _uid,
-            players = mapOf(_uid to userName.value)
+            players = listOf(Player(_uid, userName.value))
         )
         (roomDocument ?: return)
             .set(newRoom)
@@ -130,10 +130,10 @@ class MainViewModel : ViewModel() {
                 }
 
                 val gameRoom = snapshot.toObject<GameRoom>()
-                _gameRoom = gameRoom
+                _gameRoom = gameRoom ?: return@addSnapshotListener
                 val answers =
-                    if (gameRoom?.roundsInfo == null) {
-                        (1..maxRounds).toList().map { it.toString() to null }.toMap()
+                    if (gameRoom.roundsInfo.isEmpty()) {
+                        (1..playerCount).toList().map { it.toString() to null }.toMap()
                     } else {
                         gameRoom.roundsInfo.mapValues {
                             _uid?.let { uid ->
@@ -141,17 +141,24 @@ class MainViewModel : ViewModel() {
                             }
                         }
                     }
+                val isRoundOver =
+                    gameRoom.roundsInfo
+                        .getOrDefault(gameRoom.activeRound.toString(), emptyMap())
+                        .size == playerCount
+                val isGameOver = gameRoom.activeRound > gameRoom.players.size
                 _wordCardInfo.value =
                     _wordCardInfo.value?.copy(
-                        wordCard = gameRoom?.activeRound?.let { gameRoom.wordCards?.get(it - 1) },
+                        wordCard = gameRoom.wordCards.getOrNull(gameRoom.activeRound - 1),
                         usedAnswers = answers.values.filterNotNull()
                     )
 
                 _gameCardInfo.value = GameCardInfo(
                     answers = answers,
-                    activeRound = gameRoom?.activeRound,
-                    isStarted = gameRoom?.isStarted ?: false,
-                    isActivePlayer = gameRoom?.activePlayer == _uid
+                    activeRound = gameRoom.activeRound,
+                    isStarted = gameRoom.isStarted,
+                    isActivePlayer = _uid?.let { uid -> gameRoom.isActivePlayer(uid) } ?: false,
+                    isRoundOver = isRoundOver,
+                    isGameOver = isGameOver
                 )
             }
     }
@@ -168,7 +175,7 @@ class MainViewModel : ViewModel() {
                 querySnapshot.documents.shuffle()
                 _wordCards =
                     querySnapshot.documents
-                        .take(maxRounds)
+                        .take(playerCount)
                         .mapNotNull { it.toObject<WordCard>() }
 
                 initialiseRoom(openWordCard)
@@ -180,7 +187,7 @@ class MainViewModel : ViewModel() {
 
     private fun initialiseRoom(openWordCard: () -> Unit) {
         val initialRoomInfo =
-            (1..maxRounds).toList().map { it.toString() to emptyMap<String, String?>() }.toMap()
+            (1..playerCount).toList().map { it.toString() to emptyMap<String, String?>() }.toMap()
         (roomDocument ?: return)
             .update(
                 mapOf(
