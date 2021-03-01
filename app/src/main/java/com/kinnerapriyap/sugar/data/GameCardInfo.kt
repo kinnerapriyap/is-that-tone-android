@@ -5,5 +5,7 @@ data class GameCardInfo(
     val answers: Map<String, String?> = emptyMap(),
     val activeRound: Int? = null,
     val isStarted: Boolean = false,
-    val isActivePlayer: Boolean = false
+    val isActivePlayer: Boolean = false,
+    val isRoundOver: Boolean = false,
+    val isGameOver: Boolean = false,
 )

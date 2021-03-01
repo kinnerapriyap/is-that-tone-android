@@ -57,11 +57,24 @@ fun GameCardScreen(
 ) {
     val gameCardInfo: GameCardInfo by viewModel.gameCardInfo.observeAsState(GameCardInfo())
     Scaffold {
-        if (!gameCardInfo.isStarted) {
-            StartDimOverlay(
-                isActivePlayer = gameCardInfo.isActivePlayer,
-                startGame = { viewModel.startGame(openWordCard) }
-            )
+        val hasOverlay =
+            !gameCardInfo.isStarted || gameCardInfo.isGameOver || gameCardInfo.isRoundOver
+        when {
+            !gameCardInfo.isStarted ->
+                StartDimOverlay(
+                    isActivePlayer = gameCardInfo.isActivePlayer,
+                    startGame = { viewModel.startGame(openWordCard) }
+                )
+            gameCardInfo.isGameOver -> showGameOver.invoke()
+            gameCardInfo.isRoundOver ->
+                RoundOverDimOverlay(
+                    isActivePlayer = gameCardInfo.isActivePlayer,
+                    activeRound = gameCardInfo.activeRound ?: 0,
+                    goToNextRound = { viewModel.goToNextRound() }
+                )
+            else -> {
+                // do nothing
+            }
         }
         LazyVerticalGrid(cells = GridCells.Fixed(2)) {
             items(gameCardInfo.answers.toList()) { (roundNo, answer) ->
@@ -107,6 +120,28 @@ fun StartDimOverlay(
             }
         } else {
             Text(text = stringResource(id = R.string.waiting_to_start))
+        }
+    }
+}
+
+@Composable
+fun RoundOverDimOverlay(
+    isActivePlayer: Boolean,
+    activeRound: Int,
+    goToNextRound: () -> Unit
+) {
+    DimOverlay(alpha = 0x66) {
+        if (isActivePlayer) {
+            Button(onClick = { goToNextRound.invoke() }) {
+                Text(text = stringResource(id = R.string.go_to_next_round))
+            }
+        } else {
+            Text(
+                text = stringResource(
+                    id = R.string.round_over,
+                    formatArgs = arrayOf(activeRound)
+                )
+            )
         }
     }
 }
