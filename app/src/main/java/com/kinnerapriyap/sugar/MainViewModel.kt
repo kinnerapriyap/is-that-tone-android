@@ -223,4 +223,16 @@ class MainViewModel : ViewModel() {
                 // TODO: Handle error
             }
     }
+
+    fun goToNextRound() {
+        val incrementedActiveRound = _gameRoom?.activeRound?.plus(1)
+        (roomDocument ?: return)
+            .update(mapOf(ACTIVE_ROUND_KEY to incrementedActiveRound))
+            .addOnSuccessListener {
+                _gameCardInfo.value = _gameCardInfo.value?.copy(isRoundOver = false)
+            }
+            .addOnFailureListener {
+                // TODO: Handle error
+            }
+    }
 }
