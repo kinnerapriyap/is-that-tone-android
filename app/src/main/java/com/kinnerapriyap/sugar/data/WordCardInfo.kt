@@ -4,5 +4,6 @@ data class WordCardInfo(
     val wordCard: WordCard? = null,
     val selectedAnswerChar: String? = null,
     val usedAnswers: List<String>? = emptyList(),
-    val allowChange: Boolean = true
+    val allowChange: Boolean = true,
+    val instruction: Int? = null
 )

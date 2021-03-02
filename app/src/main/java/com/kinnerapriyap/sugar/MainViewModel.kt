@@ -163,13 +163,20 @@ class MainViewModel : ViewModel() {
                         .apply { this.remove(selectedAnswerChar) }
                         .filterNotNull()
                 val isActivePlayer = _uid?.let { uid -> gameRoom.isActivePlayer(uid) } ?: false
+                val allowChange =
+                    (isActivePlayer && selectedAnswerChar == null) || (!isActivePlayer && activePlayerAnswer != null)
 
                 _wordCardInfo.value =
                     _wordCardInfo.value?.copy(
                         wordCard = gameRoom.wordCards.getOrNull(gameRoom.activeRound - 1),
                         selectedAnswerChar = selectedAnswerChar,
                         usedAnswers = usedAnswers,
-                        allowChange = (isActivePlayer && selectedAnswerChar == null) || (!isActivePlayer && activePlayerAnswer != null)
+                        allowChange = allowChange,
+                        instruction = when {
+                            isActivePlayer -> R.string.choose_act
+                            !allowChange -> R.string.waiting_for_active_player
+                            else -> R.string.choose_guess
+                        }
                     )
 
 

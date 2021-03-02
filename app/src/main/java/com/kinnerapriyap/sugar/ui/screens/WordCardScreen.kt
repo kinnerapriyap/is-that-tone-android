@@ -73,6 +73,8 @@ fun WordCardScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            wordCardInfo.instruction?.let { ins -> Text(text = stringResource(ins)) }
+            Spacer(modifier = Modifier.height(20.dp))
             Text(text = "Word: ${wordCardInfo.wordCard?.word ?: ""}")
             Spacer(modifier = Modifier.height(20.dp))
             LazyColumn {

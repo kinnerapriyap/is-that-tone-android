@@ -15,10 +15,15 @@
     <string name="waiting_to_start">Waiting to start…</string>
     <string name="round_over">Round %d over!</string>
     <string name="go_to_next_round">Go to next round</string>
+    <string name="your_turn_to_act">Your turn to act, click on the green round number to choose!</string>
+    <string name="your_turn_to_guess">Click on the green round number to guess!</string>
 
     <!-- Word card -->
     <string name="you_already_chose">You already chose!</string>
     <string name="confirm">Confirm</string>
+    <string name="choose_act">Your turn to act!</string>
+    <string name="choose_guess">Your chance to guess!</string>
+    <string name="waiting_for_active_player">Waiting for the active player to choose…</string>
 
     <!-- Game over -->
     <string name="finish">Finish</string>
