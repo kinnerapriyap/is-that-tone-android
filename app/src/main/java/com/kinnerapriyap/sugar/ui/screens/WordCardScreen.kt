@@ -1,5 +1,6 @@
 package com.kinnerapriyap.sugar.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,10 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -23,7 +27,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kinnerapriyap.sugar.MainViewModel
@@ -49,24 +56,49 @@ fun WordCardScreen(
                 items(
                     wordCardInfo.wordCard?.answers?.toList() ?: return@LazyColumn
                 ) { (answerChar, answer) ->
+                    val isUnusedAnswer = wordCardInfo.usedAnswers?.contains(answerChar) == false
+                    val isChecked = selectedAnswer == answerChar
                     Row(
                         modifier = Modifier
                             .fillMaxWidth(0.6f)
                             .padding(4.dp)
                             .let {
-                                if (wordCardInfo.usedAnswers?.contains(answerChar) == false) {
+                                if (isUnusedAnswer)
                                     it.clickable { selectedAnswer = answerChar }
-                                } else it
+                                else it
+                            }
+                            .let {
+                                if (isChecked)
+                                    it.background(
+                                        MaterialTheme.colors.secondary,
+                                        RoundedCornerShape(8.dp)
+                                    )
+                                else it
                             },
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Checkbox(
-                            modifier = Modifier.padding(8.dp),
-                            checked = selectedAnswer == answerChar,
-                            onCheckedChange = null,
-                            enabled = wordCardInfo.usedAnswers?.contains(answerChar) == false
+                        Text(
+                            text = answerChar,
+                            modifier = Modifier.padding(16.dp),
+                            textDecoration = if (isUnusedAnswer) null else TextDecoration.LineThrough,
+                            fontWeight = FontWeight.SemiBold
                         )
-                        Text(text = answer, modifier = Modifier.padding(8.dp))
+                        Text(
+                            text = answer,
+                            modifier = Modifier.padding(16.dp),
+                            textDecoration = if (isUnusedAnswer) null else TextDecoration.LineThrough
+                        )
+                        Checkbox(
+                            modifier = Modifier.padding(16.dp),
+                            checked = isChecked,
+                            onCheckedChange = null,
+                            enabled = isUnusedAnswer,
+                            colors = CheckboxDefaults.colors(
+                                disabledColor = Color.White,
+                                checkedColor = MaterialTheme.colors.primary
+                            )
+                        )
                     }
                 }
             }
