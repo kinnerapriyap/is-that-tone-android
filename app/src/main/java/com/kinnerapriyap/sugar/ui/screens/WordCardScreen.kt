@@ -58,7 +58,8 @@ fun WordCardScreen(
                     ) {
                         Checkbox(
                             modifier = Modifier.padding(8.dp),
-                            checked = selectedAnswer == answerChar,
+                            checked = selectedAnswer == answerChar &&
+                                    wordCardInfo.usedAnswers?.contains(answerChar) == false,
                             onCheckedChange = null,
                             enabled = wordCardInfo.usedAnswers?.contains(answerChar) == false
                         )
