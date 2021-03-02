@@ -152,6 +152,12 @@ class MainViewModel : ViewModel() {
                 if (isGameOver) setScores()
 
                 val selectedAnswerChar = answers.getOrDefault(gameRoom.activeRound.toString(), null)
+                val activePlayerAnswer =
+                    gameRoom.roundsInfo.getOrDefault(gameRoom.activeRound.toString(), emptyMap())
+                        .getOrDefault(
+                            gameRoom.players.getOrNull(gameRoom.activeRound - 1)?.uid ?: "",
+                            null
+                        )
                 val usedAnswers =
                     answers.values.toMutableList()
                         .apply { this.remove(selectedAnswerChar) }
@@ -163,7 +169,7 @@ class MainViewModel : ViewModel() {
                         wordCard = gameRoom.wordCards.getOrNull(gameRoom.activeRound - 1),
                         selectedAnswerChar = selectedAnswerChar,
                         usedAnswers = usedAnswers,
-                        disallowChange = isActivePlayer && selectedAnswerChar != null
+                        allowChange = (isActivePlayer && selectedAnswerChar == null) || (!isActivePlayer && activePlayerAnswer != null)
                     )
 
 

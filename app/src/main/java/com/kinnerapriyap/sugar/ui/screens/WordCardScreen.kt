@@ -87,7 +87,7 @@ fun WordCardScreen(
                             .padding(4.dp)
                             .clickable(
                                 role = Role.Button,
-                                enabled = isUnusedAnswer && !wordCardInfo.disallowChange
+                                enabled = isUnusedAnswer && wordCardInfo.allowChange
                             ) { selectedAnswer = answerChar }
                             .let {
                                 if (isChecked)
@@ -131,12 +131,12 @@ fun WordCardScreen(
                         viewModel.setAnswer(answer, navigateBack)
                     }
                 },
-                enabled = selectedAnswer?.isNotBlank() == true && !wordCardInfo.disallowChange,
+                enabled = selectedAnswer?.isNotBlank() == true && wordCardInfo.allowChange,
             ) {
                 Text(
                     text = stringResource(
-                        if (wordCardInfo.disallowChange) R.string.you_already_chose
-                        else R.string.confirm
+                        if (wordCardInfo.allowChange || selectedAnswer == null) R.string.confirm
+                        else R.string.you_already_chose
                     )
                 )
             }
