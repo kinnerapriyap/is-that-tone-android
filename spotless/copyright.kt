@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Kinnera Priya Putti
+ * Copyright $YEAR Kinnera Priya Putti
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kinnerapriyap.sugar.data
-
-data class GameCardInfo(
-    // roundAsString to answer
-    val answers: Map<String, String?> = emptyMap(),
-    val activeRound: Int? = null,
-    val isStarted: Boolean = false,
-    val isActivePlayer: Boolean = false,
-    val isRoundOver: Boolean = false,
-    val isGameOver: Boolean = false,
-)
