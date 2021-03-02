@@ -17,6 +17,7 @@
     <string name="go_to_next_round">Go to next round</string>
 
     <!-- Word card -->
+    <string name="you_already_chose">You already chose!</string>
     <string name="confirm">Confirm</string>
 
     <!-- Game over -->
