@@ -53,13 +53,16 @@ fun WordCardScreen(
                         modifier = Modifier
                             .fillMaxWidth(0.6f)
                             .padding(4.dp)
-                            .clickable { selectedAnswer = answerChar },
+                            .let {
+                                if (wordCardInfo.usedAnswers?.contains(answerChar) == false) {
+                                    it.clickable { selectedAnswer = answerChar }
+                                } else it
+                            },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Checkbox(
                             modifier = Modifier.padding(8.dp),
-                            checked = selectedAnswer == answerChar &&
-                                    wordCardInfo.usedAnswers?.contains(answerChar) == false,
+                            checked = selectedAnswer == answerChar,
                             onCheckedChange = null,
                             enabled = wordCardInfo.usedAnswers?.contains(answerChar) == false
                         )
