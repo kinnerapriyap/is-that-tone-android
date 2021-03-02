@@ -32,7 +32,7 @@ fun MyApp(viewModel: MainViewModel = viewModel()) {
                 )
             }
             composable(Destinations.GameOver) {
-                GameOverScreen(actions.returnHome)
+                GameOverScreen(viewModel, actions.returnHome)
             }
             composable(Destinations.WordCard) {
                 WordCardScreen(viewModel, actions.navigateBack)

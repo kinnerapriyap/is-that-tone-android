@@ -2,6 +2,7 @@ package com.kinnerapriyap.sugar
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 
 object Destinations {
     const val Home = "home"
@@ -12,7 +13,11 @@ object Destinations {
 
 class Actions(navController: NavHostController) {
     val returnHome: () -> Unit = {
-        navController.navigate(Destinations.Home)
+        navController.navigate(Destinations.Home) {
+            popUpTo(Destinations.Home) {
+                inclusive = true
+            }
+        }
     }
     val openGameCard: () -> Unit = {
         navController.navigate(Destinations.GameCard)
