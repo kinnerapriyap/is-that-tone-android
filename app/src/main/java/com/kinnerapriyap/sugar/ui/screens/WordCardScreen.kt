@@ -45,6 +45,7 @@ fun WordCardScreen(
 ) {
     val wordCardInfo: WordCardInfo by viewModel.wordCardInfo.observeAsState(WordCardInfo())
     var selectedAnswer by rememberSaveable { mutableStateOf<String?>(null) }
+    if (selectedAnswer == null) selectedAnswer = wordCardInfo.selectedAnswerChar
     Scaffold {
         Column(
             modifier = Modifier.padding(20.dp).fillMaxSize(),
