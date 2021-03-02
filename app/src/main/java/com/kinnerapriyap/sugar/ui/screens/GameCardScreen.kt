@@ -4,7 +4,15 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -72,7 +80,7 @@ fun GameCardScreen(
             }
         }
         Column(
-            modifier = Modifier.padding(20.dp).fillMaxSize(),
+            modifier = Modifier.padding(20.dp).fillMaxHeight(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -93,9 +101,10 @@ fun GameCards(gameCardInfo: GameCardInfo, openWordCard: () -> Unit, hasOverlay: 
             val cardState = getCardState(roundNo, gameCardInfo.activeRound)
             Card(
                 modifier = Modifier
-                    .size(200.dp)
-                    .padding(40.dp)
+                    .size(100.dp)
+                    .padding(20.dp)
                     .clip(MaterialTheme.shapes.medium)
+                    .wrapContentSize()
                     .clickable(
                         role = Role.Button,
                         enabled = cardState == CardState.CURRENT && !hasOverlay
@@ -111,7 +120,7 @@ fun GameCards(gameCardInfo: GameCardInfo, openWordCard: () -> Unit, hasOverlay: 
                 border = BorderStroke(2.dp, MaterialTheme.colors.onBackground)
             ) {
                 Text(
-                    text = "$roundNo : $answer",
+                    text = "$roundNo : ${answer ?: "-"}",
                     modifier = Modifier.wrapContentSize().padding(16.dp)
                 )
             }
