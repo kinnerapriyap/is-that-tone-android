@@ -25,4 +25,5 @@
     <!-- Content descriptions -->
     <string name="room_name_leading_icon">Home icon</string>
     <string name="user_name_leading_icon">User icon</string>
+    <string name="navigate_back_icon">Back icon</string>
 </resources>

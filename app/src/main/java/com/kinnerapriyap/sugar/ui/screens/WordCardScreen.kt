@@ -19,6 +19,11 @@ import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.IconButton
+import androidx.compose.material.Icon
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -46,7 +51,23 @@ fun WordCardScreen(
     val wordCardInfo: WordCardInfo by viewModel.wordCardInfo.observeAsState(WordCardInfo())
     var selectedAnswer by rememberSaveable { mutableStateOf<String?>(null) }
     if (selectedAnswer == null) selectedAnswer = wordCardInfo.selectedAnswerChar
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {},
+                navigationIcon = {
+                    IconButton(onClick = navigateBack) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.navigate_back_icon)
+                        )
+                    }
+                },
+                backgroundColor = MaterialTheme.colors.background,
+                elevation = 0.dp
+            )
+        }
+    ) {
         Column(
             modifier = Modifier.padding(20.dp).fillMaxSize(),
             verticalArrangement = Arrangement.Center,
