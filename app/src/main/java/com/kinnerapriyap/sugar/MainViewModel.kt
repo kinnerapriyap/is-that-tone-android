@@ -62,6 +62,9 @@ class MainViewModel : ViewModel() {
     private val playerCount: Int
         get() = _gameRoom?.players?.size ?: 0
 
+    private var _scores = MutableLiveData(emptyMap<Player, Int>())
+    val scores: LiveData<Map<Player, Int>> = _scores
+
     private var _wordCards: List<WordCard>? = null
 
     private var _wordCardInfo = MutableLiveData(WordCardInfo())
@@ -146,6 +149,8 @@ class MainViewModel : ViewModel() {
                         .getOrDefault(gameRoom.activeRound.toString(), emptyMap())
                         .size == playerCount
                 val isGameOver = gameRoom.activeRound > gameRoom.players.size
+                if (isGameOver) setScores()
+
                 _wordCardInfo.value =
                     _wordCardInfo.value?.copy(
                         wordCard = gameRoom.wordCards.getOrNull(gameRoom.activeRound - 1),
@@ -161,6 +166,28 @@ class MainViewModel : ViewModel() {
                     isGameOver = isGameOver
                 )
             }
+    }
+
+    private fun setScores() {
+        val gameRoom = _gameRoom ?: return
+        _scores.value = gameRoom.players.mapIndexed { index, player ->
+            var score = 0
+            gameRoom.roundsInfo.forEach { (roundNo, answers) ->
+                if (player.uid != null) {
+                    val roundAnswer =
+                        answers.getValue(
+                            gameRoom.players.getOrNull(roundNo.toInt() - 1)?.uid ?: ""
+                        )
+                    score += when {
+                        roundNo.toInt() - 1 == index ->
+                            answers.filterValues { it == roundAnswer }.size - 1
+                        answers.getValue(player.uid) == roundAnswer -> 1
+                        else -> 0
+                    }
+                }
+            }
+            player to score
+        }.toMap()
     }
 
     fun finishGame() {
