@@ -1,6 +1,6 @@
 # Is that tone?
 
-Android app for the game はぁって言うゲーム in kotlin, made with Jetpack Compose and lots of <3
+Android app in kotlin inspired by the game はぁって言うゲーム, made with Jetpack Compose and lots of <3 
 
 ![kotlin](https://img.shields.io/badge/language-kotlin-orange)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
